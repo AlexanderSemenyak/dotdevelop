@@ -4,7 +4,30 @@ To build DotDevelop from scratch you will need to following pre-requisites.
 
 Please note, Ubuntu 20.04 LTS is the perferred environment for buiding from source as Ubuntu 22.04 LTS doesn’t support .NET Core 3.1 or 2.0 since the distro only supports openSSL 3.
 
-## Build Environment Requirements
+## Windows
+
+### Prerequisites
+
+* Install Visual Studio 2017 (_2019, or 2022_) with the .NET Desktop and .NET Core workloads and the F# optional component (note, F# is disabled by default so need to enable it in the VS installer).
+* Install Git for Windows (from [here](https://git-for-windows.github.io/))
+* Make sure you have .NET Framework 4.7.1 Reference Assemblies ([4.7.1 Targeting Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net471))
+* Install Gtk# ([installer](https://www.mono-project.com/download/stable/)). Direct link: gtk-sharp-2.12.45.msi
+* Install the Mono libraries package (installer)
+* Install GNU Gettext tools (from here)
+
+### Build Steps
+
+Open a command prompt
+
+1. Clone the repository, `https://github.com/dotdevelop/dotdevelop.git`
+   1. `cd DotDevelop`
+2. `git submodule update --init --recursive`
+3. Build the project
+   1. `./main/winbuild.bat`  (Powershell)
+
+## Linux
+
+### Build Environment Requirements
 
 The following steps are for Ubuntu, other distros may require different URLs.
 
@@ -56,7 +79,7 @@ sudo apt install curl
 sudo apt install -y cmake clang
 ```
 
-## Clone and Building
+### Clone and Building
 
 Build DotDevelop
 
@@ -77,7 +100,7 @@ bash build.sh
 cd ../../..
 ```
 
-## Launching the IDE
+### Launching the IDE
 
 Launch DotDevelop, using one of the 2 options
 
@@ -89,29 +112,28 @@ Launch DotDevelop, using one of the 2 options
 mono main/build/bin/MonoDevelop.exe
 ```
 
-### Verify .NET Core Debugger is attached
+## Verify .NET Core Debugger is attached
 
 1. Launch, MonoDevelop
 2. Edit > Preferences > Projects > .NET Core Debuggers
 3. Click `...` and navigate to, `main/build/AddIns/Samsung.Netcoredbg/netcoredbg`
-4. Click, OK and start debugging  
+4. Click, OK and start debugging
 
+## Running DotDevelop with .NET6.0+ installed
 
-### Running DotDevelop with .NET6.0+ installed
+With dotnet-sdk-6.0+ installed, the following error occurs:-
 
-With dotnet-sdk-6.0+ installed, the following error occurs:-  
+"MSB4236 WorkloadAutoImportPropsLocator could not be found".
 
-"MSB4236 WorkloadAutoImportPropsLocator could not be found".  
+This is described by  [this issue](https://github.com/dotnet/sdk/issues/17461) with the following workaround:-
 
-This is described by  [this issue](https://github.com/dotnet/sdk/issues/17461) with the following workaround:-   
+Set the environment variable `MSBuildEnableWorkloadResolver=false` prior to starting monodevelop
 
-Set the environment variable `MSBuildEnableWorkloadResolver=false` prior to starting monodevelop  
+eg, in a terminal, before starting dotdevelop as above...
 
-eg, in a terminal, before starting dotdevelop as above...   
-  
 ```bash
 export MSBuildEnableWorkloadResolver=false
-mono ./main/build/bin/MonoDevelop.exe --no-redirect 
+mono ./main/build/bin/MonoDevelop.exe --no-redirect
 ```
 
 ## References
