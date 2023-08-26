@@ -4,7 +4,36 @@ To build DotDevelop from scratch you will need to following pre-requisites.
 
 Please note, Ubuntu 20.04 LTS is the perferred environment for buiding from source as Ubuntu 22.04 LTS doesn’t support .NET Core 3.1 or 2.0 since the distro only supports openSSL 3.
 
-## Build Environment Requirements
+## Windows
+
+### Prerequisites
+
+* Install Visual Studio 2017 (_2019, or 2022_) with the .NET Desktop and .NET Core workloads and the F# optional component (note, F# is disabled by default so need to enable it in the VS installer).
+* Install Git for Windows (from [here](https://git-for-windows.github.io/))
+* Make sure you have .NET Framework
+  * 4.7.2 Reference Assemblies ([4.7.2 Targeting Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net472))
+	* 4.7.1 Reference Assemblies ([4.7.1 Targeting Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net471))
+  * 4.5.2 Reference Assemblies ([4.5.2 Targeting Pack](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net452))
+* Install Gtk# ([installer](https://www.mono-project.com/download/stable/)). Direct link: [gtk-sharp-2.12.45.msi](https://github.com/mono/gtk-sharp/releases/download/2.12.45/gtk-sharp-2.12.45.msi)
+* Install the Mono libraries package
+  * Archive Path: [MonoLibraries.msi](https://web.archive.org/web/20161003141250/https://files.xamarin.com/~jeremie/MonoLibraries.msi)
+* Install GNU Gettext tools ([from here](http://gnuwin32.sourceforge.net/packages/gettext.htm))
+
+### Build Steps
+
+Open a command prompt
+
+1. Clone the repository, `https://github.com/dotdevelop/dotdevelop.git`
+   1. `cd DotDevelop`
+2. `git submodule update --init --recursive`
+3. Build the project
+   1. `./main/winbuild.bat`  (Powershell)
+4. Run MonoDevelop.exe
+   1. main\build\bin\MonoDevelop.exe
+
+## Linux
+
+### Build Environment Requirements
 
 The following steps are for Ubuntu, other distros may require different URLs.
 
@@ -56,7 +85,7 @@ sudo apt install curl
 sudo apt install -y cmake clang
 ```
 
-## Clone and Building
+### Clone and Building
 
 Build DotDevelop
 
@@ -77,7 +106,7 @@ bash build.sh
 cd ../../..
 ```
 
-## Launching the IDE
+### Launching the IDE
 
 Launch DotDevelop, using one of the 2 options
 
@@ -89,29 +118,28 @@ Launch DotDevelop, using one of the 2 options
 mono main/build/bin/MonoDevelop.exe
 ```
 
-### Verify .NET Core Debugger is attached
+## Verify .NET Core Debugger is attached
 
 1. Launch, MonoDevelop
 2. Edit > Preferences > Projects > .NET Core Debuggers
 3. Click `...` and navigate to, `main/build/AddIns/Samsung.Netcoredbg/netcoredbg`
-4. Click, OK and start debugging  
+4. Click, OK and start debugging
 
+## Running DotDevelop with .NET6.0+ installed
 
-### Running DotDevelop with .NET6.0+ installed
+With dotnet-sdk-6.0+ installed, the following error occurs:
 
-With dotnet-sdk-6.0+ installed, the following error occurs:-  
+> "MSB4236 WorkloadAutoImportPropsLocator could not be found".
 
-"MSB4236 WorkloadAutoImportPropsLocator could not be found".  
+This is described by [this issue](https://github.com/dotnet/sdk/issues/17461) with the following workaround:
 
-This is described by  [this issue](https://github.com/dotnet/sdk/issues/17461) with the following workaround:-   
+> Set the environment variable `MSBuildEnableWorkloadResolver=false` prior to starting MonoDevelop
 
-Set the environment variable `MSBuildEnableWorkloadResolver=false` prior to starting monodevelop  
+eg, in a terminal, before starting DotDevelop as above...
 
-eg, in a terminal, before starting dotdevelop as above...   
-  
 ```bash
 export MSBuildEnableWorkloadResolver=false
-mono ./main/build/bin/MonoDevelop.exe --no-redirect 
+mono ./main/build/bin/MonoDevelop.exe --no-redirect
 ```
 
 ## References
@@ -119,3 +147,13 @@ mono ./main/build/bin/MonoDevelop.exe --no-redirect
 * [NetCoreDbg - Readme.md](https://github.com/dotdevelop/netcoredbg/tree/dotdevelop#readme)
   * [Samsung NetCoreDbg](https://github.com/Samsung/netcoredbg)
 * [Issue #19 - Samsung.NetCoreDbg External Package](https://github.com/dotdevelop/dotdevelop/issues/47)
+* Deadlink for, MonoLibraries.msi
+  * https://github.com/mono/md-website/issues/1
+  * [MonoLibraries.msi - GitHub](https://github.com/DamianSuess/MonoDevelop-Win-Install/releases/download/v7.8-beta1/MonoLibraries.msi)
+  * [Web Archive - MonoLibraries.msi](https://web.archive.org/web/20161003141250/https://files.xamarin.com/~jeremie/MonoLibraries.msi)
+* [MD-Website Windows Section Outdated](https://github.com/mono/md-website/issues/118)
+  * [GetText latest](https://mlocati.github.io/articles/gettext-iconv-windows.html)
+  * [GetText for Windows v0.21 - GitHub](https://github.com/mlocati/gettext-iconv-windows)
+  * [gettext official](https://www.gnu.org/software/gettext/)
+* MSBuild v15
+  * [Visual Studio 2017](https://visualstudio.microsoft.com/vs/older-downloads/#visual-studio-2017-and-other-products) - _Download Build Tools for VS 2017 (v15.9), deselect everything (65 MB)_
